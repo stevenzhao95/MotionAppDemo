@@ -28,5 +28,5 @@ Replace `<access_token>` with your actual Facebook access token.
 ## Example
 
 ```bash
-ts-node script.ts ACCESS_TOKEN
+ts-node script.ts <access_token>
 ```
