@@ -28,9 +28,7 @@ const argv = yargs
 function main() {
   const accessToken: string = argv.accessToken;
   const debug: boolean = argv.debug || false;
-  setInterval(() => {
-    queryAPI(accessToken, debug);
-  }, 2000);
+  queryAPI(accessToken, debug);
 }
 
 main();
