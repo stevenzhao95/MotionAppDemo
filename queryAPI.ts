@@ -14,10 +14,14 @@ const rateLimitErrorCdMap: Record<number, string> = {
 };
 
 const maxRetries = 5;
-const defaultInterval = 500;
+const defaultInterval = 2000;
+const defaultIntervalIncrement = 30000;
 let currentAppUsageMetric: appUsageType;
 let backoffInterval = 30000;
 
+// display rate limit information in debug mode
+// warning will be displayed when approaching or exceeding rate limits
+// or when parsing of the API response header has been unsuccessful
 const displayAppUsage = (
   response: AxiosResponse | AxiosError,
   debug: boolean
@@ -72,6 +76,11 @@ export async function queryAPI(
       },
     });
 
+    // reset interval after reaching below the rate limit
+    if (backoffInterval !== 30000) {
+      backoffInterval = 30000;
+    }
+
     displayAppUsage(response, debug);
 
     console.log("Facebook API Response:", response.data);
@@ -96,7 +105,7 @@ export async function queryAPI(
           retries++;
 
           if (retries >= maxRetries) {
-            backoffInterval += 30000;
+            backoffInterval += defaultIntervalIncrement;
             retries = 0;
           }
           return queryAPI(accessToken, debug, retries);
